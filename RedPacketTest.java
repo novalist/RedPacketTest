@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -26,7 +24,7 @@ public class RedPacketTest {
   public void read(Integer num) throws IOException {
 
     int availProcessors = Runtime.getRuntime().availableProcessors();
-    BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(2);
+    BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(num);
     ExecutorService executorService = new ThreadPoolExecutor(availProcessors, availProcessors * 2,
         10,
         TimeUnit.MINUTES, blockingQueue);
@@ -46,12 +44,12 @@ public class RedPacketTest {
     }
 
 
-//    try {
-//      countDownLatch.await();
-//      executorService.shutdown();
-//    } catch (InterruptedException e) {
-//      e.printStackTrace();
-//    }
+    try {
+      countDownLatch.await();
+      executorService.shutdown();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
   }
 
@@ -64,12 +62,18 @@ public class RedPacketTest {
    */
   public void addToAccountFile(Integer num) throws IOException {
 
-    ExecutorService executorService = Executors.newCachedThreadPool();
+    int availProcessors = Runtime.getRuntime().availableProcessors();
+    BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<Runnable>(num);
+    ExecutorService executorService = new ThreadPoolExecutor(availProcessors, availProcessors * 2,
+        10,
+        TimeUnit.MINUTES, blockingQueue);
+
     CountDownLatch countDownLatch = new CountDownLatch(num);
     for (int i = 0; i < num; i++) {
 
       System.out.println("================file " + i + " addToAccountFile start=======");
-      executorService.submit(new AddToAccountThread(i, countDownLatch));
+      new AddToAccountThread(i, countDownLatch).run();
+      //executorService.submit(new AddToAccountThread(i, countDownLatch));
       System.out.println("================file " + i + " addToAccountFile end=======");
     }
 

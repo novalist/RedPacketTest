@@ -36,6 +36,7 @@ public class AddToAccountThread implements Runnable{
 
       FileUtil.write("/Users/listnova/Downloads/result/result/result" + i + ".txt",countResultMap);
 
+      System.out.println(countDownLatch.getCount());
     } catch (IOException e) {
       e.printStackTrace();
     }finally {
