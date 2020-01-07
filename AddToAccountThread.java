@@ -21,15 +21,15 @@ public class AddToAccountThread implements Runnable{
 
   public void run() {
 
-    Map<String, Integer> hashResultMap = null;
+    Map<String, Long> hashResultMap = null;
     try {
       hashResultMap = FileUtil
           .readForHash("/Users/listnova/Downloads/result/reHashResult/result" + i + ".txt",false);
 
-      Map<String, Integer> countMap = FileUtil
+      Map<String, Long> countMap = FileUtil
           .readForHash("/Users/listnova/Downloads/guidang/account/account" + i + ".txt",true);
 
-      Map<String, Integer> countResultMap = new LinkedHashMap<String, Integer>(100);
+      Map<String, Long> countResultMap = new LinkedHashMap<String, Long>(100);
       for(String key : countMap.keySet()){
         countResultMap.put(key, ( hashResultMap.containsKey(key)?hashResultMap.get(key) : 0 ) + countMap.get(key));
       }
@@ -38,10 +38,8 @@ public class AddToAccountThread implements Runnable{
 
       System.out.println(countDownLatch.getCount());
     } catch (IOException e) {
-      e.printStackTrace();
     }finally {
       countDownLatch.countDown();
     }
-
   }
 }

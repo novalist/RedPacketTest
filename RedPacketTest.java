@@ -72,8 +72,7 @@ public class RedPacketTest {
     for (int i = 0; i < num; i++) {
 
       System.out.println("================file " + i + " addToAccountFile start=======");
-      new AddToAccountThread(i, countDownLatch).run();
-      //executorService.submit(new AddToAccountThread(i, countDownLatch));
+      executorService.submit(new AddToAccountThread(i, countDownLatch));
       System.out.println("================file " + i + " addToAccountFile end=======");
     }
 
@@ -85,14 +84,12 @@ public class RedPacketTest {
     }
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, InterruptedException {
 
     System.out.println("================start=======");
     RedPacketTest redPacketTest = new RedPacketTest();
     redPacketTest.read(50);
 
-    System.out.println();
-    System.out.println();
     System.out.println();
     System.out.println("================addToAccountFile start=======");
 
